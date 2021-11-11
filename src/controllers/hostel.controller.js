@@ -1,4 +1,5 @@
 const Hostel = require('../models/Hostel')
+const Room = require('../models/Room')
 
 module.exports = {
    create: async (req, res, next) => {
@@ -36,6 +37,10 @@ module.exports = {
     },
 
     deleteOne: async(req,res) =>{
+        // cascade rooms on delete
+        await Room.deleteMany({hostelId:req.params.id}).then(result=>res.status(200).send(result))
+            .catch(err=>res.status(503).send(err))  
+
         await Hostel.deleteOne({_id:req.params.id})
             .then(result=>res.status(200).send(result))
             .catch(err=>res.status(404).json({
