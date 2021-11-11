@@ -37,7 +37,7 @@ module.exports = {
     },
 
     deleteOne: async(req,res) =>{
-        // cascade rooms on delete
+        // cascade rooms on delete, normally use fetch api here to get all rooms, store in an array
         await Room.deleteMany({hostelId:req.params.id}).then(result=>res.status(200).send(result))
             .catch(err=>res.status(503).send(err))  
 
