@@ -6,7 +6,7 @@ const room = require('../controllers/room.controller')
 router.get('/', room.getAll)
 router.get('/:id', room.getOne)
 router.post('/', room.create)
-router.post('/:id', room.deleteOne)
+router.delete('/:id', room.deleteOne)
 router.delete('/', room.deleteAll)
 router.patch('/:id', room.update)
 
