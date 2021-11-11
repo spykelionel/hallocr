@@ -3,6 +3,8 @@ const morgan = require('morgan')
 const hostelRoute = require('./routes/hostel.route')
 const roomRoute = require('./routes/room.route')
 const studentRoute = require('./routes/student.route')
+const roleRoute = require('./routes/role.route')
+const userRoute = require('./routes/user.route')
 
 const app = express()
 
@@ -14,6 +16,8 @@ app.use(express.json())
 app.use('/api/hostel', hostelRoute)
 app.use('/api/room', roomRoute)
 app.use('/api/student', studentRoute)
+app.use('/api/role', roleRoute)
+app.use('/api/user', userRoute)
 
 
 app.use((req,res,next)=>{
