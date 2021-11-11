@@ -2,7 +2,8 @@ const mongoose = require('mongoose')
 
 const roomSchema = new mongoose.Schema({
     number: {
-        type: Number
+        type: Number,
+        required: true
     },
     hostelId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -11,5 +12,5 @@ const roomSchema = new mongoose.Schema({
     }
 }, {timestamps: true})
 
-const Room = mongoose.model('Hostel', roomSchema)
+const Room = mongoose.model('Room', roomSchema)
 module.exports = Room
