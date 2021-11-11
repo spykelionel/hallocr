@@ -65,8 +65,8 @@ module.exports = {
                     console.log(error)
                 }
             } else {
-                res.status(409).json({
-                    message: "Resource Exist"
+                res.status(404).json({
+                    message: "Resource Doesn't Exist"
                 })
             }
             
