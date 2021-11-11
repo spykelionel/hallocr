@@ -45,8 +45,8 @@ module.exports = {
     },
 
     deleteAll: async(req,res) =>{
-        await Room.deleteAll({})
-            .then(result=>res.status(200).send(result))
+        await Room.deleteMany({})
+            .then(result=>res.status(200).send({...result, info: "deleted all rooms"}))
             .catch(err=>res.status(404).json({
                 ...err,
                 message: "Not found"
@@ -59,7 +59,10 @@ module.exports = {
                 try {
                     await Room.updateOne({_id:req.params.id},{
                         $set: req.body
-                    }).then(result=>res.status(201).send(result))
+                    }).then(result=>res.status(201).send({
+                        ...result,
+                        info: "successfully updated room"
+                    }))
                     .catch(err=>res.status(409).send(err))
                 } catch (error) {
                     console.log(error)
