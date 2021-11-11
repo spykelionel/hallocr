@@ -25,5 +25,5 @@ const userSchema = new mongoose.Schema({
     password: String
 }, {timestamps: true})
 
-const User = mongoose.model('Student', userSchema)
+const User = mongoose.model('User', userSchema)
 module.exports = User
