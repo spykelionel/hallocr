@@ -1,6 +1,9 @@
 const express = require('express')
 const morgan = require('morgan')
-const hostelRoute = require('./routes/hostel.route.js')
+const hostelRoute = require('./routes/hostel.route')
+const roomRoute = require('./routes/room.route')
+const studentRoute = require('./routes/student.route')
+
 const app = express()
 
 
@@ -9,6 +12,8 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 
 app.use('/api/hostel', hostelRoute)
+app.use('/api/room', roomRoute)
+app.use('/api/student', studentRoute)
 
 
 app.use((req,res,next)=>{
