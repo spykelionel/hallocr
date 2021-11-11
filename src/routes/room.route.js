@@ -7,7 +7,7 @@ router.get('/', room.getAll)
 router.get('/:id', room.getOne)
 router.post('/', room.create)
 router.post('/:id', room.deleteOne)
-router.post('/', room.deleteAll)
+router.dekete('/', room.deleteAll)
 router.patch('/:id', room.update)
 
 module.exports = router
