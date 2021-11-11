@@ -1,6 +1,8 @@
 const Hostel = require('../models/Hostel')
 const Room = require('../models/Room')
 
+
+// check if superuser or isAdmin for specific controller or check role priviledges before performing further actions
 module.exports = {
    create: async (req, res, next) => {
     Hostel?.exists({hostelNumber:req.body.hostelNumber}).then(async(result)=>{
@@ -50,8 +52,11 @@ module.exports = {
     },
 
     deleteAll: async(req,res) =>{
-        await Hostel.deleteAll({})
-            .then(result=>res.status(200).send(result))
+        await Hostel.deleteMany({})
+            .then(result=>{
+                Room.deleteMany({}).then(r=>console.log(r)).catch(err=>console.log(err))
+                res.status(200).send({...result, info:"deleted all hostels. Associated rooms also deleted"})
+            })
             .catch(err=>res.status(404).json({
                 ...err,
                 message: "Not found"
@@ -64,8 +69,11 @@ module.exports = {
                 try {
                     await Hostel.updateOne({_id:req.params.id},{
                         $set: req.body
-                    }).then(result=>res.status(201).send(result))
-                    .catch(err=>res.status(409).send(err))
+                    }).then(result=>res.status(201).send({
+                        ...result,
+                        info: "successfully updated hostel"
+                    }))
+                    .catch(err=>res.status(501).send(err))
                 } catch (error) {
                     console.log(error)
                 }
