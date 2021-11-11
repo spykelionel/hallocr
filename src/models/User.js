@@ -14,11 +14,13 @@ const userSchema = new mongoose.Schema({
     profileurl: String,
     isAdmin:  {
         type: Boolean,
-        required: true
+        required: true,
+        default: false
     },
     roleId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Role"
+        ref: "Role",
+        required: true
     },
     password: String
 }, {timestamps: true})

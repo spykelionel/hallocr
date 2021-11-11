@@ -3,9 +3,13 @@ const mongoose = require('mongoose')
 const paymentSchema = new mongoose.Schema({
     studentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Student"
+        ref: "Student",
+        required: true
     },
-    method: String,
+    method: {
+        type:String,
+        required: true
+    },
 }, {timestamps: true})
 
 const Payment = mongoose.model('Hostel', paymentSchema)

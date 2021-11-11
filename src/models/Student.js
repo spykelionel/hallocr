@@ -7,7 +7,8 @@ const studentSchema = new mongoose.Schema({
     level: String,
     roomId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Room"
+        ref: "Room",
+        required: true
     }
 }, {timestamps: true})
 

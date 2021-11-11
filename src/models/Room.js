@@ -6,7 +6,8 @@ const roomSchema = new mongoose.Schema({
     },
     hostelId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Hostel"
+        ref: "Hostel",
+        required: true
     }
 }, {timestamps: true})
 
