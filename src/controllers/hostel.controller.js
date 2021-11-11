@@ -54,10 +54,10 @@ module.exports = {
     },
 
     update: async(req,res) =>{
-        Hostel?.exists({hostelNumber:req.body.hostelNumber}).then(async(result)=>{
+        Hostel?.exists({_id:req.params.id}).then(async(result)=>{
             if(result){
                 try {
-                    await Hostel.updateOne({hostelNumber:req.body.hostelNumber},{
+                    await Hostel.updateOne({_id:req.params.id},{
                         $set: req.body
                     }).then(result=>res.status(201).send(result))
                     .catch(err=>res.status(409).send(err))
