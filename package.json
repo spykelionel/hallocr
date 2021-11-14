@@ -10,7 +10,8 @@
     "morgan": "^1.10.0"
   },
   "scripts": {
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "start": "nodemon src/server.js"
   },
   "devDependencies": {
     "cors": "^2.8.5",
