@@ -11,7 +11,7 @@
   },
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "nodemon src/server.js"
+    "start": "node src/server.js"
   },
   "devDependencies": {
     "cors": "^2.8.5",
