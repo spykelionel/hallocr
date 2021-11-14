@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const hostelRoute = require('./routes/hostel.route')
 const roomRoute = require('./routes/room.route')
 const studentRoute = require('./routes/student.route')
@@ -10,6 +11,7 @@ const app = express()
 
 
 app.use(morgan('dev'))
+// app.use(cors({origin: ["*"],}))
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 
@@ -26,7 +28,7 @@ app.use((req,res,next)=>{
     next(err)
 })
 app.use((err,req,res,next)=>{
-    // res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Origin", "*")
     res.status(err.status || 500).json({
        error: {
             message: err.message || "endpoint not found",
