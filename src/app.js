@@ -1,6 +1,8 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const compression = require('compression')
+const helmet = require('helmet')
 const hostelRoute = require('./routes/hostel.route')
 const roomRoute = require('./routes/room.route')
 const studentRoute = require('./routes/student.route')
@@ -12,6 +14,8 @@ const app = express()
 
 app.use(morgan('dev'))
 // app.use(cors({origin: ["*"],}))
+app.use(compression())
+app.use(helmet())
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 
