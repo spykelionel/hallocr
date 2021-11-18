@@ -1,25 +1,55 @@
+const multer = require('multer');
 const User = require("../models/User");
 const Role = require("../models/Role");
 
+  const storage = multer.diskStorage({
+      destination: (req, res, cb) => {
+        cb(null, `./uploads`);
+      },
+      filename: (req, file, cb)=>{
+        cb(null, new Date().toISOString() +"_"+ file.originalname);
+      }
+    })
+
+    const uploads = multer({ storage });
 module.exports = {
-  create: async (req, res, next) => {
-    User?.exists({ number: req.body.number })
+  upload: uploads.single('profileurl'),
+  
+  isValid: async(req, res, next)=> {
+    console.log(await req.body)
+     User?.exists({ email: req.body.email })
+      .then(result=>{
+        if(result){
+          console.log("user exist")
+          res.status(409).json({
+            info: {
+              message: "User exists",
+            }
+          })
+        } else {
+          next()
+        }
+      })
+      .catch(err=>console.log(err))
+  },
+
+  create: async (req, res) => {
+    User?.exists({ email: req.body.email })
       .then(async (result) => {
         if (!result) {
           try {
             Role?.exists(
-              { _id: req.body.RoleId } || {
-                name: req.body.name,
-              }
+              { _id: req.body.roleId }
             )
               .then(async (result) => {
                 if (result) {
-                  const user = new User({ ...req.body });
+                  const user = new User({ ...req.body, profileurl:req.file.path });
                   await user
                     .save()
                     .then((result) => res.status(201).send(result))
-                    .catch((err) => res.status(409).send(err));
+                    .catch((err) => res.status(501).send(err));
                   console.log(req.body);
+                  console.log('File: ->',req.file);
                 } else {
                   res.status(404).json({
                     info: "requested Role not found",
@@ -50,9 +80,17 @@ module.exports = {
       .then((result) => res.status(200).send(result))
       .catch((err) => res.status(503).send(err));
   },
+  getImg: async (req, res, next) => {
+  
+    await User.findOne({profileurl: req.params.img})
+      .lean()
+      .then((result) => res.status(200).send(result))
+      .catch((err) => res.status(503).send(err));
+  },
 
   getOne: async (req, res) => {
-    await User.findOne({ _id: req.params.id })
+    try {
+      await User.findOne({ _id: req.params.id })
       .lean()
       .then((result) => {
         if (result) {
@@ -68,6 +106,14 @@ module.exports = {
           info: "Server Error",
         })
       );
+    } catch (error) {
+      console.log("Error ",new Error(error))
+      res.status(501).json({
+        ...err,
+        info: "Server Error. Error getting the user",
+      })
+    }
+    
   },
 
   deleteOne: async (req, res) => {
