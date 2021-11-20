@@ -13,11 +13,11 @@ const uri_local = `${process.env.HOST}/${process.env.DBNAME}`;
 
 mongoose.connect(uri_local, {useUnifiedTopology: true, useNewUrlParser: true}, async(err)=>{
     if(err){
-        console.log("Couldn't connnect")
+        console.log("Couldn't connnect mongoDB")
         console.error(err?.stack)
         
     } else {
-        console.log("Connected successsfully")
+        console.log("Connected successsfully to mongoDB")
     }
 })
 

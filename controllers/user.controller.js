@@ -1,36 +1,46 @@
-const multer = require('multer');
+const multer = require("multer");
 const User = require("../models/User");
 const Role = require("../models/Role");
 
-  const storage = multer.diskStorage({
-      destination: (req, res, cb) => {
-        cb(null, `./uploads`);
-      },
-      filename: (req, file, cb)=>{
-        cb(null, new Date().toISOString() +"_"+ file.originalname);
-      }
-    })
+const storage = multer.diskStorage({
+  destination: (req, res, cb) => {
+    cb(null, `./uploads`);
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + "_" + file.originalname);
+  },
+});
 
-    const uploads = multer({ storage });
+const uploads = multer({ storage });
+
+function findValidUser() {}
+
 module.exports = {
-  upload: uploads.single('profileurl'),
-  
-  isValid: async(req, res, next)=> {
-    console.log(await req.body)
-     User?.exists({ email: req.body.email })
-      .then(result=>{
-        if(result){
-          console.log("user exist")
+  naiveWare: function (req, res, next) {
+    next();
+  },
+  // make this property valid if user credentials are valid and role? is valid
+  upload: uploads.single("profileurl"),
+
+  isValid: async (req, res, next) => {
+    // bug, doesn't even read form data
+    console.log(await req.body);
+    User?.exists({ email: req.body.email })
+      .then((result) => {
+        if (result) {
+          console.log("user exist");
           res.status(409).json({
             info: {
               message: "User exists",
-            }
-          })
+            },
+          });
         } else {
-          next()
+          console.log("moving to next mfunction");
+          next();
         }
+        // return result;
       })
-      .catch(err=>console.log(err))
+      .catch((err) => console.log(err));
   },
 
   create: async (req, res) => {
@@ -38,30 +48,16 @@ module.exports = {
       .then(async (result) => {
         if (!result) {
           try {
-            Role?.exists(
-              { _id: req.body.roleId }
-            )
-              .then(async (result) => {
-                if (result) {
-                  const user = new User({ ...req.body, profileurl:req.file.path });
-                  await user
-                    .save()
-                    .then((result) => res.status(201).send(result))
-                    .catch((err) => res.status(501).send(err));
-                  console.log(req.body);
-                  console.log('File: ->',req.file);
-                } else {
-                  res.status(404).json({
-                    info: "requested Role not found",
-                    statusCode: 404,
-                  });
-                }
-              })
-              .catch((err) =>
-                res
-                  .status(501)
-                  .send({ ...err, info: "requested Role not found" })
-              );
+            const user = new User({
+              ...req.body,
+              profileurl: req.file.path,
+            });
+            await user
+              .save()
+              .then((result) => res.status(201).send(result))
+              .catch((err) => res.status(501).send(err));
+            console.log(req.body);
+            console.log("File: ->", req.file);
           } catch (error) {
             console.log(error);
           }
@@ -77,24 +73,24 @@ module.exports = {
   getAll: async (req, res, next) => {
     await User.find({})
       .lean()
+      .select("_id name email contact gender profileurl isAdmin roleId")
       .then((result) => res.status(200).send(result))
       .catch((err) => res.status(503).send(err));
   },
   getImg: async (req, res, next) => {
-  
-    await User.findOne({profileurl: req.params.img})
+    await User.findOne({ profileurl: req.params.img })
       .lean()
       .then((result) => res.status(200).send(result))
       .catch((err) => res.status(503).send(err));
   },
 
   getOne: async (req, res) => {
-    try {
-      await User.findOne({ _id: req.params.id })
+    // try {
+    await User.findOne({ _id: req.params.id })
       .lean()
       .then((result) => {
         if (result) {
-          res.status(200).send(result);
+          res.status(200).json({ ...result, password: undefined });
         }
         res.status(404).json({
           message: "User Not found",
@@ -106,14 +102,13 @@ module.exports = {
           info: "Server Error",
         })
       );
-    } catch (error) {
-      console.log("Error ",new Error(error))
-      res.status(501).json({
-        ...err,
-        info: "Server Error. Error getting the user",
-      })
-    }
-    
+    // } catch (error) {
+    //   new Error(error)
+    //   res.status(501).json({
+    //     ...error,
+    //     info: "Server Error. Error getting the user",
+    //   });
+    // }
   },
 
   deleteOne: async (req, res) => {

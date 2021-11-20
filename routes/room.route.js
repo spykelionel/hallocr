@@ -3,6 +3,9 @@ const router = express.Router()
 
 const room = require('../controllers/room.controller')
 
+// router.all('*', ()=>{
+//     // authenticate for any route benieth this route
+// })
 router.get('/', room.getAll)
 router.get('/:id', room.getOne)
 router.post('/', room.create)

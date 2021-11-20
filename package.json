@@ -11,8 +11,8 @@
   },
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "set NODE_ENV=development&& node index.js",
-    "start-prod": "set NODE_ENV=production&& node index.js"
+    "start": "set NODE_ENV=development && node index.js",
+    "start-prod": "set NODE_ENV=production && node index.js"
   },
   "devDependencies": {
     "cors": "^2.8.5",

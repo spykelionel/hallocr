@@ -3,6 +3,9 @@ const router = express.Router()
 
 const user = require('../controllers/user.controller')
 
+// router.all('*', ()=>{
+//     // authenticate for any route benieth this route
+// })
 router.get('/', user.getAll)
 // router.get('/uploads/:img', user.getImg)
 router.get('/:id', user.getOne)

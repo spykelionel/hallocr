@@ -3,6 +3,9 @@ const router = express.Router()
 
 const hostel = require('../controllers/hostel.controller')
 
+// router.all('*', ()=>{
+//     // authenticate for any route benieth this route
+// })
 router.get('/', hostel.getAll)
 router.get('/:id', hostel.getOne)
 router.post('/', hostel.create)

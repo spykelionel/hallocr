@@ -3,6 +3,9 @@ const router = express.Router()
 
 const student = require('../controllers/student.controller')
 
+// router.all('*', ()=>{
+//     // authenticate for any route benieth this route
+// })
 router.get('/', student.getAll)
 router.get('/:id', student.getOne)
 router.post('/', student.create)
