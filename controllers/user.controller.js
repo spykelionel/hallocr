@@ -50,14 +50,14 @@ module.exports = {
           try {
             const user = new User({
               ...req.body,
-              profileurl: req.file.path,
+              profileurl: req?.file?.path ?? '',
             });
             await user
               .save()
               .then((result) => res.status(201).send(result))
               .catch((err) => res.status(501).send(err));
             console.log(req.body);
-            console.log("File: ->", req.file);
+            console.log("File: ->", req?.file ?? "No file parsed");
           } catch (error) {
             console.log(error);
           }
@@ -85,30 +85,31 @@ module.exports = {
   },
 
   getOne: async (req, res) => {
-    // try {
+    try {
     await User.findOne({ _id: req.params.id })
       .lean()
       .then((result) => {
         if (result) {
-          res.status(200).json({ ...result, password: undefined });
+          return res.status(200).json({ ...result, password: undefined });
         }
-        res.status(404).json({
+       return res.status(404).json({
           message: "User Not found",
         });
       })
-      .catch((err) =>
-        res.status(501).json({
+      .catch((err) =>{
+       return res.status(501).json({
           ...err,
           info: "Server Error",
         })
+      }
       );
-    // } catch (error) {
-    //   new Error(error)
-    //   res.status(501).json({
-    //     ...error,
-    //     info: "Server Error. Error getting the user",
-    //   });
-    // }
+    } catch (error) {
+      new Error(error)
+      res.status(501).json({
+        ...error,
+        info: "Server Error. Error getting the user",
+      });
+    }
   },
 
   deleteOne: async (req, res) => {
