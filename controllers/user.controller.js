@@ -1,6 +1,8 @@
 const multer = require("multer");
+const bcrypt = require('bcrypt')
 const User = require("../models/User");
 const Role = require("../models/Role");
+
 
 const storage = multer.diskStorage({
   destination: (req, res, cb) => {
@@ -24,6 +26,7 @@ module.exports = {
 
   isValid: async (req, res, next) => {
     // bug, doesn't even read form data
+    
     console.log(await req.body);
     User?.exists({ email: req.body.email })
       .then((result) => {
@@ -48,15 +51,26 @@ module.exports = {
       .then(async (result) => {
         if (!result) {
           try {
-            const user = new User({
+            await bcrypt.hash(req.body.password, 10, async (err, hash)=>{
+              if(err){
+                console.log("Error hashing password")
+                return res.status(500).json({
+                  message: "couldnt save user"
+                })
+              } 
+                const user = new User({
               ...req.body,
+              password: hash,
               profileurl: req?.file?.path ?? '',
-            });
+            });    
             await user
-              .save()
-              .then((result) => res.status(201).send(result))
-              .catch((err) => res.status(501).send(err));
-            console.log(req.body);
+            .save()
+            .then((result) => {return res.status(201).send(result)})
+            .catch((err) => {return res.status(501).send(err)});
+            })
+          
+     
+            console.log({...req.body, password: "....0.A$..(3>."});
             console.log("File: ->", req?.file ?? "No file parsed");
           } catch (error) {
             console.log(error);
@@ -73,7 +87,7 @@ module.exports = {
   getAll: async (req, res, next) => {
     await User.find({})
       .lean()
-      .select("_id name email contact gender profileurl isAdmin roleId")
+      .select("_id name email contact gender password profileurl isAdmin roleId")
       .then((result) => res.status(200).send(result))
       .catch((err) => res.status(503).send(err));
   },
@@ -90,7 +104,7 @@ module.exports = {
       .lean()
       .then((result) => {
         if (result) {
-          return res.status(200).json({ ...result, password: undefined });
+          return res.status(200).json({ ...result, });
         }
        return res.status(404).json({
           message: "User Not found",
@@ -172,4 +186,5 @@ module.exports = {
       })
       .catch((err) => console.error(err));
   },
+  login: require('../auth/auth').login
 };
