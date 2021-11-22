@@ -11,7 +11,7 @@
   },
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "set NODE_ENV=development && node index.js",
+    "start": "node index.js",
     "start-prod": "set NODE_ENV=production && node index.js",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
