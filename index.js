@@ -9,10 +9,9 @@ const server = http.createServer(app)
 
 const uri = `${process.env.URI}` || `${process.env.HOST}/${process.env.DBNAME}`;
 const uri_local = `${process.env.HOST}/${process.env.DBNAME}`;
-const URI = "mongodb+srv://deva:hallocr00sys@cluster0.l3bi3.mongodb.net/hallocr?retryWrites=true&w=majority"
 // const uri = `mongodb+srv://deva:<password>@cluster0.l3bi3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
-mongoose.connect(URI, {useUnifiedTopology: true, useNewUrlParser: true}, async(err)=>{
+mongoose.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true}, async(err)=>{
     if(err){
         console.log("Couldn't connnect mongoDB")
         console.error(err?.stack)
