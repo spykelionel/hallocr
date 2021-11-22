@@ -14,7 +14,7 @@ const app = express()
 
 
 app.use(morgan('dev'))
-// app.use(cors({origin: ["*"],}))
+app.use(cors({origin: ["*"],}))
 app.use(compression())
 app.use(helmet())
 app.use(express.urlencoded({extended:true}))
@@ -36,7 +36,7 @@ function identifyError(req,res,next){
     next(err)
 }
 function handleError(err,req,res){
-    res.header("Access-Control-Allow-Origin", "*")
+    // res.header("Access-Control-Allow-Origin", "*")
     res.status(err.status || 500).json({
        error: {
             message: err.message || "endpoint not found",
